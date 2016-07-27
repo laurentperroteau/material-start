@@ -68,30 +68,37 @@ allows developers to load any module format (ES6, CommonJS, AMD, and globals).
 These tutorials assume that you have already cloned the repository and executed the following commands:
 
 * `git checkout es6-tutorial`
-* `npm install jspm -g`
+* `npm install jspm live-server -g`
 * `jspm update`
+* `live-server --open=app`
 
-You will notice two directories within this tutorial:
+> **Note:** You should use a web-server (like live-server above) to view your app at each step. Open the dev console to see
+  any warnings and browse the elements.
 
- 1. `app` - This is where all of your application files will be created and edited.
- 2. `steps` - This folder contains sub-folders, one for each step.
+You will notice a few directories within this tutorial:
 
-> **Note:** Each step folder presents the final _changes_ for that stage. So if you open `steps/step-3`, you will see
-  which files changed and what their code **should** look like at the end of Step #3 (or the beginning of Step #4).
+ 1. `app/src` - This is where all of your application files will be created and edited.
+ 2. `app/src/users` - This folder contains some tutorial-provided services and views for you to
+    reuse.
+ 3. `app/assets` - This folder contains some tutorial-provided images and icons which are used by
+    the application.
+
+> **Note:** You should not need to edit anything in the `app/src/users` or `app/assets` directories until
+  Steps #9 & #10 where we will refactor the users code.
 
 These folders and files will be used to guide you through the development process. By following these tutorial steps,
 you will be very quickly introduced to the powerful features of Angular Material.
 
 We encourage you to walk through each step yourself and build the application from the ground up. However, if you get
-stuck or want to start from a clean slate, you can copy the `steps/step-#/app` folder and paste it on top of your main
-`app` folder.
+stuck or want to start from a clean slate, each step has an associated Git tag that you can checkout to reset your
+code to match the start of the associated step in the tutorial.
 
-> **Note:** You should use a web-server (like live-server) to view your app at each step. Open the dev console to see
-  any warnings and browse the elements.
+For instance, to start on Step 3, run `git checkout step-3`. Also note that `step-1` is the same as the `es6-tutorial`
+branch.
 
 > **Note:** In some of the Steps in this README, we have abbreviated some of the HTML or JavaScript in order to show
-  what is being added or changed, so you may not be able copy/paste every example into your code. If you wish to do this,
-  you should copy/paste the actual files in the `steps` directory.
+  what is being added or changed, so you may not be able copy/paste every example into your code. If you wish to start
+  fresh, use the Git tags as described above.
 
 - - -
 
@@ -137,13 +144,13 @@ angular
   .element( document )
   .ready( function() {
     angular
-      .module( 'jspm-bootstrap', [ ] )
+      .module( 'starter-app-bootstrap', [ ] )
       .run(()=>{
-        console.log(`Running the 'jspm-bootstrap' module for ES6 Material-Start Tutorial`);
+        console.log(`Running the 'starter-app-bootstrap' module for ES6 Material-Start Tutorial`);
       });
 
     let body = document.getElementsByTagName("body")[0];
-    angular.bootstrap( body, [ 'jspm-bootstrap' ]);
+    angular.bootstrap( body, [ 'starter-app-bootstrap' ]);
   });
 ```
 
@@ -175,10 +182,14 @@ Here you will modify the application to use Angular-Material.
 > **Note:** The NPM and JSPM configurations already installed the Angular Material libraries. Re-installs are easily
   done using `jspm install angular-material@master`.
 
+> **Note:** Note that we have manually included the Material CSS. This is because JSPM does not guarantee
+  the order in which CSS files are loaded, and we want to ensure that our `app.css` file is loaded
+  after the Material CSS so that it can properly override certain selectors.
+
 `app/src/app.js`
 ```js
 // Load libraries
-import angular from 'angular'
+import angular from 'angular';
 
 import 'angular-animate';
 import 'angular-aria';
@@ -204,13 +215,13 @@ angular
   .element( document )
   .ready( function() {
     angular
-      .module( 'jspm-bootstrap', [ App.name ] )
+      .module( 'starter-app-bootstrap', [ App.name ] )
       .run(()=>{
-        console.log(`Running the 'jspm-bootstrap' module for ES6 Material-Start Tutorial`);
+        console.log(`Running the 'starter-app-bootstrap' module for ES6 Material-Start Tutorial`);
       });
 
     let body = document.getElementsByTagName("body")[0];
-    angular.bootstrap( body, [ 'jspm-bootstrap' ]);
+    angular.bootstrap( body, [ 'starter-app-bootstrap' ]);
   });
 ```
 - - -
@@ -230,7 +241,7 @@ for the User **detail** view.
 
 `app/index.html`
 ```html
-  <body layout="column">
+  <body ng-cloak layout="column">
 
     <!-- Container #1 (see wireframe) -->
     <md-toolbar layout="row" class="md-toolbar-tools">
@@ -318,7 +329,7 @@ components.
 Here you integrate your custom, application logic.
 
 * `app.js` internally loads the Users module
-* `Users.js` defines your data services, models, and controllers
+* `Users.js` defines your data services, models, and controllers (remember that this is provided by the tutorial)
 
 `app/src/app.js`
 ```js
@@ -329,7 +340,7 @@ import 'angular-animate';
 import 'angular-aria';
 import 'angular-material';
 
-import Users from 'lib/users/Users'
+import Users from 'src/users/Users';
 
 export default angular.module( "starter-app", [ 'ngMaterial', Users.name ] )
   .run(() => {
@@ -356,7 +367,7 @@ Here you will replace the hardcoded HTML with dynamic markup using Angular direc
   <!-- Container #1 (see wireframe) -->
   <md-toolbar layout="row" class="md-toolbar-tools">
     <md-button class="menu md-icon-button">
-      <md-icon md-svg-icon="menu" ></md-icon>
+      <md-icon md-svg-icon="menu"></md-icon>
     </md-button>
     <h1>Angular Material - Starter App</h1>
   </md-toolbar>
@@ -383,7 +394,7 @@ Here you will replace the hardcoded HTML with dynamic markup using Angular direc
       <p>{{ul.selected.content}}</p>
 
       <md-button class="md-fab md-fab-bottom-right">
-        <md-icon md-svg-icon="share" ></md-icon>
+        <md-icon md-svg-icon="share"></md-icon>
       </md-button>
     </md-content>
 
@@ -403,9 +414,8 @@ import 'angular-material';
 
 import Users from 'lib/users/Users';
 
-export default angular
-  .module( "starter-app", [ 'ngMaterial', Users.name ] )
-  .config(function ($mdIconProvider) {
+export default angular.module( "starter-app", [ 'ngMaterial', Users.name ] )
+  .config(($mdIconProvider) => {
     // Register the user `avatar` icons
     $mdIconProvider
       .defaultIconSet("./assets/svg/avatars.svg", 128)
@@ -461,13 +471,11 @@ Here you will add responsive breakpoints so the application layout will adapt to
     <p>{{ul.selected.content}}</p>
 
     <md-button class="md-fab md-fab-bottom-right" ng-click="ul.share($event)">
-      <md-icon md-svg-icon="share" ></md-icon>
+      <md-icon md-svg-icon="share"></md-icon>
     </md-button>
   </md-content>
 
 </div>
-
-<!-- additional script tags here -->
 </body>
 ```
 
@@ -486,7 +494,7 @@ import Users from 'src/users/Users';
 
 export default angular
   .module( "starter-app", [ 'ngMaterial', Users.name ] )
-  .config(function ($mdIconProvider) {
+  .config(($mdIconProvider) => {
 
     $mdIconProvider
       .defaultIconSet("./assets/svg/avatars.svg", 128)
@@ -521,7 +529,7 @@ import Users from 'src/users/Users';
 
 export default angular
   .module( "starter-app", [ 'ngMaterial', Users.name ] )
-  .config(function ($mdIconProvider, $mdThemingProvider) {
+  .config(($mdIconProvider, $mdThemingProvider) => {
 
     $mdIconProvider
       .defaultIconSet("./assets/svg/avatars.svg", 128)
@@ -570,13 +578,18 @@ Here you will fix any ARIA warnings that Angular Material may display in the Dev
 </body>
 ```
 
+Congratulations! You now have a fully functional Angular Material application!
+
+In the next two steps, we'll refactor our code into separate Angular 1.4-style components, and then
+once again refactor using the new Angular 1.5 `component()` API.
+
 - - -
 
 ### Step #9:
 
 Here you will refactor your HTML and code to create the `<users-list>` and `<user-details>` components.
 
-* creates templates based on HTML in `index.html`
+* create templates based on HTML in `index.html`
 * define your UsersList and UserDetails directives
 * create your directive controllers and extract logic from the `lib/users/controllers/UsersController.js`
 * update your `app.js` module to register the new directives
@@ -594,49 +607,34 @@ For this app, we recommend the following layout for your files:
         - UsersList.js <-- This is our directive file
         - UsersListController.js
 
-In lieu of copy/pasting all of the files, we have shown just the `app.js` and `index.html` files below. If you wish
-to see how we have separated the directive, controller and HTML files; please see the files located in `steps/step-9/app`.
+In lieu of copy/pasting all of the files, we have shown just the `Users.js` and `index.html` files below. If you wish
+to see how we have separated the directives so you can run `git checkout step-10` and view the files.
 
 > **Note:** In order to stay with the ES6 paradigm of classes, the `UsersList` and `UserDetails` have been written as
   full classes rather than plain functions. This means that we must first instantiate the class before we pass it to
   Angular's `.directive()` method as you can see below. We'll change this in Step #10 below to export a simple config
   object that is more consistent with the `.component()` API.
 
-`app/src/app.js`
+`app/src/users/Users.js`
 ```js
-// Load libraries
-import angular from 'angular';
+// Load the custom app ES6 modules
 
-import 'angular-animate';
-import 'angular-aria';
-import 'angular-material';
-
-import Users from 'src/users/Users';
+import UsersService from 'src/users/services/UsersDataService'
+import UsersController from 'src/users/controllers/UsersController'
 
 import UsersList from 'src/users/list/UsersList';
 import UserDetails from 'src/users/details/UserDetails';
 
-export default angular
-  .module( "starter-app", [ 'ngMaterial', Users.name ] )
+// Define the Angular 'users' module
 
+export default angular
+  .module("users", ['ngMaterial'])
+   
   .directive("usersList", () => new UsersList)
   .directive("userDetails", () => new UserDetails)
-
-  .config(function ($mdIconProvider, $mdThemingProvider) {
-
-    $mdIconProvider
-      .defaultIconSet("./assets/svg/avatars.svg", 128)
-      .icon("menu", "./assets/svg/menu.svg", 24)
-      .icon("share", "./assets/svg/share.svg", 24)
-      .icon("google_plus", "./assets/svg/google_plus.svg", 24)
-      .icon("hangouts", "./assets/svg/hangouts.svg", 24)
-      .icon("twitter", "./assets/svg/twitter.svg", 24)
-      .icon("phone", "./assets/svg/phone.svg", 24);
-
-    $mdThemingProvider.theme('default')
-      .primaryPalette('brown')
-      .accentPalette('red');
-  });
+  
+  .service("usersService", UsersService)
+  .controller("UsersController", UsersController);
 ```
 
 `app/index.html`
@@ -672,7 +670,7 @@ Here you will refactor your directives and controllers to use the Angular 1.5 Co
 
 * combine the directives and controllers logic into the **UsersList** and **UserDetails** classes
 * Use the **bindings** keyword and *1-way* data-binding
-* update the App module to register the new components
+* update the Users module to register the new components
 
 > **Note:** If you want to copy/paste the code from the `step-10` directory, you will also need to delete the
   `app/src/users/list/UsersListController.js` as it is not used.
@@ -704,41 +702,26 @@ export default {
 };
 ```
 
-`app/src/app.js`
+`app/src/users/Users.js`
 ```js
-// Load libraries
-import angular from 'angular';
+// Load the custom app ES6 modules
 
-import 'angular-animate';
-import 'angular-aria';
-import 'angular-material';
-
-import Users from 'src/users/Users';
+import UsersService from 'src/users/services/UsersDataService';
+import UsersController from 'src/users/controllers/UsersController';
 
 import UsersList from 'src/users/list/UsersList';
 import UserDetails from 'src/users/details/UserDetails';
 
-export default angular
-  .module( "starter-app", [ 'ngMaterial', Users.name ] )
+// Define the Angular 'users' module
 
+export default angular
+  .module("users", ['ngMaterial'])
+   
   .component( UsersList.name, UsersList.config )
   .component( UserDetails.name, UserDetails.config )
-
-  .config(function ($mdIconProvider, $mdThemingProvider) {
-
-    $mdIconProvider
-      .defaultIconSet("./assets/svg/avatars.svg", 128)
-      .icon("menu", "./assets/svg/menu.svg", 24)
-      .icon("share", "./assets/svg/share.svg", 24)
-      .icon("google_plus", "./assets/svg/google_plus.svg", 24)
-      .icon("hangouts", "./assets/svg/hangouts.svg", 24)
-      .icon("twitter", "./assets/svg/twitter.svg", 24)
-      .icon("phone", "./assets/svg/phone.svg", 24);
-
-    $mdThemingProvider.theme('default')
-      .primaryPalette('brown')
-      .accentPalette('red');
-  });
+  
+  .service("usersService", UsersService)
+  .controller("UsersController", UsersController);
 ```
 
 ## Summary
