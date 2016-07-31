@@ -3,18 +3,15 @@
     angular
         .module('users')
         .directive('userContact', [
-            'userService', '$mdSidenav', '$mdBottomSheet', '$timeout', '$log',
+            '$mdBottomSheet', '$log',
             ContactDirective
         ]);
 
     /**
-     * Main Controller for the Angular Material Starter App
-     * @param $scope
-     * @param $mdSidenav
-     * @param avatarsService
      * @constructor
+     * @return {object} directive
      */
-    function ContactDirective( userService, $mdSidenav, $mdBottomSheet, $timeout, $log ) {
+    function ContactDirective() {
 
         var directive = {
             restrict: 'E',
@@ -27,7 +24,12 @@
             controller: ContactController
         };
 
-        function ContactController() {
+        /**
+         * Main Controller for <user-contact> directive
+         * @param $mdBottomSheet
+         * @param $log
+         */
+        function ContactController( $mdBottomSheet, $log ) {
 
             var self = this;
 
