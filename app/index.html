@@ -50,9 +50,7 @@
           <h2>{{ul.selected.name}}</h2>
           <p>{{ul.selected.content}}</p>
 
-          <md-button class="share" md-no-ink ng-click="ul.makeContact(ul.selected)" aria-label="Share with {{ ul.selected.name }}">
-            <md-icon md-svg-icon="share"></md-icon>
-          </md-button>
+          <user-contact><user-contact>
         </md-content>
 
     </div>
@@ -65,6 +63,7 @@
     <script src="./src/users/Users.js"></script>
     <script src="./src/users/UserController.js"></script>
     <script src="./src/users/UserService.js"></script>
+    <script src="./src/contact/ContactDirective.js"></script>
 
     <script type="text/javascript">
 
