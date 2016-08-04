@@ -35,14 +35,7 @@
     <div flex layout="row">
 
         <md-sidenav  ng-click="ul.toggleList()" md-is-locked-open="$mdMedia('gt-sm')" md-component-id="left" class="md-whiteframe-z2" >
-          <md-list>
-            <md-list-item ng-repeat="it in ul.users">
-                <md-button ng-click="ul.selectUser(it)" ng-class="{'selected' : it === ul.selected }">
-                  <md-icon md-svg-icon="{{it.avatar}}" class="avatar"></md-icon>
-                  {{it.name}}
-                </md-button>
-            </md-list-item>
-          </md-list>
+          <user-list users="ul.users" on-user-selected="ul.selected = userSelected"></user-list>
         </md-sidenav>
 
         <md-content flex id="content">
@@ -63,6 +56,7 @@
     <script src="./src/users/Users.js"></script>
     <script src="./src/users/UserController.js"></script>
     <script src="./src/users/UserService.js"></script>
+    <script src="./src/users/UserListDirective.js"></script>
     <script src="./src/contact/ContactDirective.js"></script>
 
     <script type="text/javascript">

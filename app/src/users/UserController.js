@@ -19,7 +19,6 @@
 
     self.selected     = null;
     self.users        = [ ];
-    self.selectUser   = selectUser;
     self.toggleList   = toggleUsersList;
 
     // Load all registered users
@@ -40,14 +39,6 @@
      */
     function toggleUsersList() {
       $mdSidenav('left').toggle();
-    }
-
-    /**
-     * Select the current avatars
-     * @param menuId
-     */
-    function selectUser ( user ) {
-      self.selected = angular.isNumber(user) ? $scope.users[user] : user;
     }
   }
 
