@@ -19,7 +19,12 @@ module.exports = function(config) {
       './node_modules/angular-aria/angular-aria.js',
       './node_modules/angular-material/angular-material.js',
       './node_modules/angular-mocks/angular-mocks.js',
-      'app/src/**/*.test.js'
+      './app/src/users/Users.js',
+      './app/src/users/UserController.js',
+      './app/src/users/UserService.js',
+      './app/src/users/UserListDirective.js',
+      './app/src/contact/ContactDirective.js',
+      './app/src/**/*.test.js'
     ],
 
 
